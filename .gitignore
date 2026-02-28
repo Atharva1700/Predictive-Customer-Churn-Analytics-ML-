@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+.eggs/
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data — ignore large raw files, keep processed samples
+data/raw/*.csv
+data/raw/*.parquet
+!data/raw/.gitkeep
+data/processed/*.csv
+data/processed/*.parquet
+!data/processed/.gitkeep
+
+# Models — large binary files
+models/*.pkl
+models/*.joblib
+models/*.model
+!models/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Optuna DB
+*.db
