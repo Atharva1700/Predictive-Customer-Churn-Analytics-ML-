@@ -1,0 +1,119 @@
+# ============================================================
+# Customer Churn Prediction — Central Configuration
+# ============================================================
+
+data:
+  n_samples: 200000
+  random_state: 42
+  test_size: 0.20
+  raw_path: "data/raw/churn_raw.csv"
+  processed_path: "data/processed/churn_processed.csv"
+
+features:
+  target: "churn"
+  drop_cols: ["customer_id"]
+  numeric_cols:
+    - tenure
+    - monthly_charges
+    - total_charges
+    - num_services
+    - avg_monthly_revenue
+    - charge_per_service
+  binary_cols:
+    - gender
+    - partner
+    - dependents
+    - phone_service
+    - paperless_billing
+    - senior_citizen
+    - is_loyal
+    - is_high_value
+    - no_support_services
+    - auto_payment
+  ordinal_cols:
+    contract:
+      Month-to-month: 0
+      One year: 1
+      Two year: 2
+  ohe_cols:
+    - internet_service
+    - payment_method
+    - multiple_lines
+    - online_security
+    - online_backup
+    - device_protection
+    - tech_support
+    - streaming_tv
+    - streaming_movies
+    - tenure_bucket
+
+imbalance:
+  method: "smote"             # smote | class_weight | none
+  smote_k_neighbors: 5
+
+models:
+  random_forest:
+    n_estimators: 300
+    max_depth: 15
+    min_samples_split: 10
+    min_samples_leaf: 5
+    max_features: "sqrt"
+    class_weight: "balanced"
+    n_jobs: -1
+    random_state: 42
+
+  xgboost:
+    n_estimators: 300
+    learning_rate: 0.05
+    max_depth: 7
+    subsample: 0.8
+    colsample_bytree: 0.8
+    scale_pos_weight: 3
+    eval_metric: "logloss"
+    random_state: 42
+    n_jobs: -1
+
+  lightgbm:
+    n_estimators: 300
+    learning_rate: 0.05
+    max_depth: 7
+    num_leaves: 63
+    subsample: 0.8
+    colsample_bytree: 0.8
+    class_weight: "balanced"
+    random_state: 42
+    n_jobs: -1
+    verbose: -1
+
+  logistic_regression:
+    C: 0.5
+    class_weight: "balanced"
+    max_iter: 1000
+    solver: "saga"
+    random_state: 42
+
+  stacking:
+    cv: 5
+    stack_method: "predict_proba"
+    passthrough: false
+
+optuna:
+  n_trials: 30
+  direction: "maximize"
+  metric: "roc_auc"
+
+evaluation:
+  threshold: 0.5
+  cv_folds: 5
+  shap_sample_size: 2000
+
+segmentation:
+  high_risk_threshold: 0.60
+  medium_risk_threshold: 0.30
+  retention_success_rate: 0.30
+
+output:
+  models_dir: "models/"
+  figures_dir: "reports/figures/"
+  model_filename: "churn_stacking_model.pkl"
+  scaler_filename: "churn_scaler.pkl"
